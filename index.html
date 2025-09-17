@@ -114,7 +114,7 @@
         }
 
         .node.clickable:hover {
-            stroke: #540b0e;
+            stroke: #3d5a80;
             stroke-width: 3;
         }
 
@@ -124,7 +124,7 @@
         }
 
         .node.selected {
-            stroke: #1f7a8c;
+            stroke: #3d5a80;
             stroke-width: 4;
         }
 
@@ -153,7 +153,7 @@
         }
 
         .edge.active {
-            stroke: #1f7a8c;
+            stroke: #3d5a80;
             stroke-width: 3;
         }
 
@@ -718,13 +718,14 @@
             svg.innerHTML = '';
             
             // Draw edges first (so they appear behind nodes)
-            networkEdges.forEach(edge => {
+            networkEdges.forEach((edge, index) => {
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line.setAttribute('x1', networkNodes[edge.from].x);
                 line.setAttribute('y1', networkNodes[edge.from].y);
                 line.setAttribute('x2', networkNodes[edge.to].x);
                 line.setAttribute('y2', networkNodes[edge.to].y);
                 line.setAttribute('class', 'edge');
+                line.setAttribute('data-edge', `${edge.from}-${edge.to}`);
                 svg.appendChild(line);
             });
             
@@ -783,15 +784,34 @@
             });
             participantData.lastActionTime = Date.now();
             
-            // Update visual selection
+            // Reset all visual selections
             document.querySelectorAll('.node').forEach(node => {
                 node.classList.remove('selected');
             });
+            document.querySelectorAll('.edge').forEach(edge => {
+                edge.classList.remove('active');
+            });
             
+            // Update visual selection
             const selectedNode = document.querySelector(`[data-node="${nodeId}"]`);
             if (selectedNode) {
                 selectedNode.classList.add('selected');
             }
+            
+            // Highlight connected edges
+            networkEdges.forEach(edge => {
+                // Special case: if selecting Supplier B, don't highlight edge to 3PL B
+                if (nodeId === 'B' && edge.from === 'F2' && edge.to === 'B') {
+                    return; // Skip this edge
+                }
+                
+                if (edge.from === nodeId || edge.to === nodeId) {
+                    const edgeElement = document.querySelector(`[data-edge="${edge.from}-${edge.to}"]`);
+                    if (edgeElement) {
+                        edgeElement.classList.add('active');
+                    }
+                }
+            });
             
             // Update info panel
             displayNodeInfo(nodeId);
