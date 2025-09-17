@@ -114,7 +114,7 @@
         }
 
         .node.clickable:hover {
-            stroke: #3d5a80;
+            stroke: #540b0e;
             stroke-width: 3;
         }
 
@@ -414,20 +414,36 @@
     <div class="container">
         <header class="header">
             <h1>Supplier Selection Research Study</h1>
-            <p>Make optimal supplier choices based on available information</p>
+            <p>Choose the best supplier option each week</p>
         </header>
 
         <div class="scenario-bar">
             <div class="scenario-info">
-                <div>
+                <div class="week-progress">
                     <div class="week-badge" id="weekBadge">Week 1</div>
+                    <div class="progress-info">
+                        <div class="progress-text" id="progressText">Week 1 of 16</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 6.25%"></div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <div class="scenario-title" id="scenarioTitle">Baseline Scenario</div>
-                    <div class="scenario-description" id="scenarioDescription">Standard supplier information available</div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 6.25%"></div>
+                <div class="scenario-flow">
+                    <div class="scenario-step">
+                        <div class="scenario-box active" id="scenario0">Baseline</div>
+                        <div class="scenario-arrow" id="arrow0">→</div>
+                    </div>
+                    <div class="scenario-step">
+                        <div class="scenario-box locked" id="scenario1">Transparency</div>
+                        <div class="scenario-arrow locked" id="arrow1">→</div>
+                    </div>
+                    <div class="scenario-step">
+                        <div class="scenario-box locked" id="scenario2">Reputation</div>
+                        <div class="scenario-arrow locked" id="arrow2">→</div>
+                    </div>
+                    <div class="scenario-step">
+                        <div class="scenario-box locked" id="scenario3">Verification</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -750,7 +766,7 @@
                     clickArea.setAttribute('data-node', id);
                     clickArea.addEventListener('click', () => selectNode(id));
                     clickArea.addEventListener('mouseenter', () => {
-                        circle.style.stroke = '#3d5a80';
+                        circle.style.stroke = '#540b0e';
                         circle.style.strokeWidth = '3';
                     });
                     clickArea.addEventListener('mouseleave', () => {
@@ -921,12 +937,34 @@
 
         function updateUI() {
             const currentScenario = scenarios[participantData.currentScenario];
-            const progress = ((participantData.currentScenario * 4 + participantData.currentWeek - 1) / 16) * 100;
+            const totalWeeks = 16;
+            const currentWeekOverall = (participantData.currentScenario * 4) + participantData.currentWeek;
+            const progress = (currentWeekOverall / totalWeeks) * 100;
             
+            // Update week and progress
             document.getElementById('weekBadge').textContent = `Week ${participantData.currentWeek}`;
-            document.getElementById('scenarioTitle').textContent = currentScenario.name;
-            document.getElementById('scenarioDescription').textContent = currentScenario.description;
+            document.getElementById('progressText').textContent = `Week ${currentWeekOverall} of ${totalWeeks}`;
             document.getElementById('progressFill').style.width = `${progress}%`;
+            
+            // Update scenario flow visualization
+            for (let i = 0; i < 4; i++) {
+                const scenarioBox = document.getElementById(`scenario${i}`);
+                const arrow = document.getElementById(`arrow${i}`);
+                
+                if (i < participantData.currentScenario) {
+                    // Completed scenarios
+                    scenarioBox.className = 'scenario-box completed';
+                    if (arrow) arrow.className = 'scenario-arrow';
+                } else if (i === participantData.currentScenario) {
+                    // Current active scenario
+                    scenarioBox.className = 'scenario-box active';
+                    if (arrow) arrow.className = 'scenario-arrow';
+                } else {
+                    // Locked scenarios
+                    scenarioBox.className = 'scenario-box locked';
+                    if (arrow) arrow.className = 'scenario-arrow locked';
+                }
+            }
         }
 
         function showResults() {
@@ -1016,4 +1054,3 @@
     </script>
 </body>
 </html>
-
