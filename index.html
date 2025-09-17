@@ -114,7 +114,13 @@
         }
 
         .node:hover {
-            transform: scale(1.1);
+            stroke: #d90429;
+            stroke-width: 3;
+        }
+
+        .node-clickarea {
+            fill: transparent;
+            cursor: pointer;
         }
 
         .node.selected {
@@ -731,12 +737,29 @@
                 circle.setAttribute('r', node.type === 'user' ? 25 : 30);
                 circle.setAttribute('class', `node ${node.type}`);
                 circle.setAttribute('data-node', id);
-                
-                if (node.type !== 'user') {
-                    circle.addEventListener('click', () => selectNode(id));
-                }
-                
                 svg.appendChild(circle);
+                
+                // Create larger invisible clickable area
+                if (node.type !== 'user') {
+                    const clickArea = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    clickArea.setAttribute('cx', node.x);
+                    clickArea.setAttribute('cy', node.y);
+                    clickArea.setAttribute('r', 45); // Larger radius for easier clicking
+                    clickArea.setAttribute('class', 'node-clickarea');
+                    clickArea.setAttribute('data-node', id);
+                    clickArea.addEventListener('click', () => selectNode(id));
+                    clickArea.addEventListener('mouseenter', () => {
+                        circle.style.stroke = '#540b0e';
+                        circle.style.strokeWidth = '3';
+                    });
+                    clickArea.addEventListener('mouseleave', () => {
+                        if (!circle.classList.contains('selected')) {
+                            circle.style.stroke = '';
+                            circle.style.strokeWidth = '';
+                        }
+                    });
+                    svg.appendChild(clickArea);
+                }
                 
                 // Create node label
                 const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
