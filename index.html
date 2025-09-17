@@ -49,17 +49,17 @@
         }
 
         .scenario-info {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .week-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .scenario-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #022b3a;
         }
 
         .week-badge {
@@ -74,82 +74,6 @@
             color: #1f7a8c;
             font-size: 0.9rem;
             text-align: right;
-        }
-
-        .chevron-progress {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 60px;
-            margin-top: 10px;
-        }
-
-        .chevron-container {
-            position: relative;
-            height: 50px;
-            margin-right: -1px;
-            display: flex;
-            align-items: center;
-        }
-
-        .chevron {
-            height: 50px;
-            width: 160px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%, 15px 50%);
-            transition: all 0.3s ease;
-        }
-
-        .chevron.baseline {
-            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%);
-        }
-
-        .chevron.completed {
-            background: #022b3a;
-            color: white;
-        }
-
-        .chevron.active {
-            background: #1f7a8c;
-            color: white;
-        }
-
-        .chevron.locked {
-            background: #e1e5f2;
-            color: #bfdbf7;
-        }
-
-        .chevron-progress-bar {
-            position: absolute;
-            bottom: 2px;
-            left: 15px;
-            right: 15px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .chevron.baseline .chevron-progress-bar {
-            left: 5px;
-        }
-
-        .chevron-progress-fill {
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 2px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-
-        .chevron.locked .chevron-progress-bar,
-        .chevron.locked .chevron-progress-fill {
-            background: rgba(191, 219, 247, 0.3);
         }
 
         .main-content {
@@ -455,48 +379,9 @@
 
         <div class="scenario-bar">
             <div class="scenario-info">
-                <div class="week-info">
-                    <div class="week-badge" id="weekBadge">Week 1</div>
-                    <div class="scenario-description" id="scenarioDescription">Standard supplier information available</div>
-                </div>
-                
-                <div class="chevron-progress">
-                    <div class="chevron-container">
-                        <div class="chevron baseline active" id="chevron0">
-                            Baseline
-                            <div class="chevron-progress-bar">
-                                <div class="chevron-progress-fill" id="chevronProgress0" style="width: 25%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="chevron-container">
-                        <div class="chevron locked" id="chevron1">
-                            Transparency
-                            <div class="chevron-progress-bar">
-                                <div class="chevron-progress-fill" id="chevronProgress1" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="chevron-container">
-                        <div class="chevron locked" id="chevron2">
-                            Reputation
-                            <div class="chevron-progress-bar">
-                                <div class="chevron-progress-fill" id="chevronProgress2" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="chevron-container">
-                        <div class="chevron locked" id="chevron3">
-                            Verification
-                            <div class="chevron-progress-bar">
-                                <div class="chevron-progress-fill" id="chevronProgress3" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="scenario-title" id="scenarioTitle">Baseline</div>
+                <div class="scenario-description" id="scenarioDescription">Standard supplier information available</div>
+                <div class="week-badge" id="weekBadge">Week 1</div>
             </div>
         </div>
 
@@ -643,12 +528,14 @@
         // Scenario configurations
         const scenarios = [
             {
-                name: 'Baseline Scenario',
+                name: 'Baseline',
+                title: 'Baseline',
                 description: 'Standard supplier information available',
                 additionalInfo: {}
             },
             {
                 name: 'Transparency Regime',
+                title: 'Scenario 1: Transparency',
                 description: 'Real-time operational data available',
                 additionalInfo: {
                     'A': {
@@ -684,7 +571,8 @@
                 }
             },
             {
-                name: 'Reputation Regime', 
+                name: 'Reputation Regime',
+                title: 'Scenario 2: Reputation',
                 description: 'Aggregated ratings and testimonials available',
                 additionalInfo: {
                     'A': {
@@ -721,6 +609,7 @@
             },
             {
                 name: 'Verification Regime',
+                title: 'Scenario 3: Verification',
                 description: 'Certification status and compliance verification',
                 additionalInfo: {
                     'A': {
@@ -989,31 +878,11 @@
 
         function updateUI() {
             const currentScenario = scenarios[participantData.currentScenario];
-            const weekProgress = (participantData.currentWeek / 4) * 100;
             
-            // Update week badge and scenario description
-            document.getElementById('weekBadge').textContent = `Week ${participantData.currentWeek}`;
+            // Update scenario title, description and week badge
+            document.getElementById('scenarioTitle').textContent = currentScenario.title;
             document.getElementById('scenarioDescription').textContent = currentScenario.description;
-            
-            // Update chevron states and progress bars
-            for (let i = 0; i < 4; i++) {
-                const chevron = document.getElementById(`chevron${i}`);
-                const progressBar = document.getElementById(`chevronProgress${i}`);
-                
-                if (i < participantData.currentScenario) {
-                    // Completed scenarios
-                    chevron.className = 'chevron completed';
-                    progressBar.style.width = '100%';
-                } else if (i === participantData.currentScenario) {
-                    // Current active scenario
-                    chevron.className = `chevron active${i === 0 ? ' baseline' : ''}`;
-                    progressBar.style.width = `${weekProgress}%`;
-                } else {
-                    // Locked scenarios
-                    chevron.className = 'chevron locked';
-                    progressBar.style.width = '0%';
-                }
-            }
+            document.getElementById('weekBadge').textContent = `Week ${participantData.currentWeek}`;
         }
 
         function showResults() {
