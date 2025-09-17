@@ -431,15 +431,12 @@
                 <div class="scenario-flow">
                     <div class="scenario-step">
                         <div class="scenario-box active" id="scenario0">Baseline</div>
-                        <div class="scenario-arrow" id="arrow0">→</div>
                     </div>
                     <div class="scenario-step">
                         <div class="scenario-box locked" id="scenario1">Transparency</div>
-                        <div class="scenario-arrow locked" id="arrow1">→</div>
                     </div>
                     <div class="scenario-step">
                         <div class="scenario-box locked" id="scenario2">Reputation</div>
-                        <div class="scenario-arrow locked" id="arrow2">→</div>
                     </div>
                     <div class="scenario-step">
                         <div class="scenario-box locked" id="scenario3">Verification</div>
@@ -949,20 +946,16 @@
             // Update scenario flow visualization
             for (let i = 0; i < 4; i++) {
                 const scenarioBox = document.getElementById(`scenario${i}`);
-                const arrow = document.getElementById(`arrow${i}`);
                 
                 if (i < participantData.currentScenario) {
                     // Completed scenarios
                     scenarioBox.className = 'scenario-box completed';
-                    if (arrow) arrow.className = 'scenario-arrow';
                 } else if (i === participantData.currentScenario) {
                     // Current active scenario
                     scenarioBox.className = 'scenario-box active';
-                    if (arrow) arrow.className = 'scenario-arrow';
                 } else {
                     // Locked scenarios
                     scenarioBox.className = 'scenario-box locked';
-                    if (arrow) arrow.className = 'scenario-arrow locked';
                 }
             }
         }
