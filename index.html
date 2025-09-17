@@ -465,7 +465,7 @@
                         <div class="chevron baseline active" id="chevron0">
                             Baseline
                             <div class="chevron-progress-bar">
-                                <div class="chevron-progress-fill" id="chevronProgress0" style="width: 25%"></div>
+                                <div class="chevron-progress-fill" id="chevronProgress0" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
@@ -989,7 +989,9 @@
 
         function updateUI() {
             const currentScenario = scenarios[participantData.currentScenario];
-            const weekProgress = (participantData.currentWeek / 4) * 100;
+            // Progress should be based on completed weeks, not current week
+            // Week 1 = 0% (just started), Week 2 = 25%, Week 3 = 50%, Week 4 = 75%, next scenario = 100%
+            const weekProgress = ((participantData.currentWeek - 1) / 4) * 100;
             
             // Update week badge and scenario description
             document.getElementById('weekBadge').textContent = `Week ${participantData.currentWeek}`;
