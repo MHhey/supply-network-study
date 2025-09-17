@@ -561,18 +561,16 @@
         };
 
         // Supplier profiles
+        // Supplier profiles
         const supplierProfiles = {
             'A': {
                 name: 'Supplier A',
                 type: 'supplier',
                 baseAttributes: {
                     'Relationship': 'New market entrant',
-                    'Location': 'Local',
                     'SLA': '90%',
-                    'Certifications': 'High quality certifications',
                     'Lead Time': 'Slow',
-                    'Flexibility': 'Flexible',
-                    'Cost': 'Low'
+                    'Certifications': 'High quality certifications'
                 }
             },
             'B': {
@@ -580,12 +578,9 @@
                 type: 'supplier',
                 baseAttributes: {
                     'Relationship': 'Established',
-                    'Location': 'Distant',
                     'SLA': '80%',
-                    'Certifications': 'Basic certifications',
                     'Lead Time': 'Fast',
-                    'Flexibility': 'Inflexible',
-                    'Cost': 'Competitive'
+                    'Certifications': 'Basic certifications'
                 }
             },
             'C': {
@@ -593,12 +588,9 @@
                 type: 'supplier', 
                 baseAttributes: {
                     'Relationship': 'Established',
-                    'Location': 'Overseas',
                     'SLA': '85%',
-                    'Certifications': 'Standard certifications',
                     'Lead Time': 'Medium',
-                    'Flexibility': 'Moderate',
-                    'Cost': 'Very Low'
+                    'Certifications': 'Standard certifications'
                 }
             },
             'D': {
@@ -606,40 +598,33 @@
                 type: 'supplier',
                 baseAttributes: {
                     'Relationship': 'New partnership',
-                    'Location': 'Local',
                     'SLA': '95%',
-                    'Certifications': 'Premium certifications',
                     'Lead Time': 'Very Fast',
-                    'Flexibility': 'Highly Flexible',
-                    'Cost': 'High'
+                    'Certifications': 'Premium certifications'
                 }
             },
             'F1': {
                 name: '3PL A',
                 type: 'threepl',
                 baseAttributes: {
-                    'Suppliers Managed': 'Multiple suppliers',
                     'Service Range': 'Consolidation terminal',
                     'Experience': 'Established',
-                    'Coverage': 'Regional',
-                    'Technology': 'Advanced tracking',
-                    'Cost': 'Standard'
+                    'Suppliers Managed': 'Multiple suppliers',
+                    'Coverage': 'Regional'
                 }
             },
             'F2': {
                 name: '3PL B',
                 type: 'threepl', 
                 baseAttributes: {
-                    'Suppliers Managed': 'Single supplier exclusive',
                     'Service Range': 'Basic logistics',
                     'Experience': 'New service',
-                    'Coverage': 'Local',
-                    'Technology': 'Basic systems',
-                    'Cost': 'Low'
+                    'Suppliers Managed': 'Single supplier exclusive',
+                    'Coverage': 'Local'
                 }
             }
         };
-
+       
         // Scenario configurations
         const scenarios = [
             {
@@ -1105,3 +1090,4 @@
     </script>
 </body>
 </html>
+
