@@ -114,7 +114,7 @@
         }
 
         .node:hover {
-            stroke: #d90429;
+            stroke: #540b0e;
             stroke-width: 3;
         }
 
@@ -692,12 +692,12 @@
         // Network layout
         const networkNodes = {
             'User': { x: 100, y: 250, type: 'user', label: 'You' },
-            'A': { x: 300, y: 150, type: 'supplier', label: 'Supplier A' },
-            'B': { x: 300, y: 350, type: 'supplier', label: 'Supplier B' },
-            'F1': { x: 500, y: 200, type: 'threepl', label: '3PL A' },
-            'F2': { x: 500, y: 300, type: 'threepl', label: '3PL B' },
-            'C': { x: 700, y: 150, type: 'supplier', label: 'Supplier C' },
-            'D': { x: 700, y: 350, type: 'supplier', label: 'Supplier D' }
+            'A': { x: 400, y: 120, type: 'supplier', label: 'Supplier A', clickable: true },
+            'B': { x: 400, y: 380, type: 'supplier', label: 'Supplier B', clickable: true },
+            'F1': { x: 300, y: 200, type: 'threepl', label: '3PL A', clickable: true },
+            'F2': { x: 300, y: 300, type: 'threepl', label: '3PL B', clickable: true },
+            'C': { x: 600, y: 120, type: 'supplier', label: 'Supplier C', clickable: false },
+            'D': { x: 600, y: 380, type: 'supplier', label: 'Supplier D', clickable: false }
         };
 
         const networkEdges = [
@@ -740,7 +740,7 @@
                 svg.appendChild(circle);
                 
                 // Create larger invisible clickable area
-                if (node.type !== 'user') {
+                if (node.type !== 'user' && node.clickable !== false) {
                     const clickArea = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                     clickArea.setAttribute('cx', node.x);
                     clickArea.setAttribute('cy', node.y);
