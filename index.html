@@ -1,310 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Supplier Selection Research Study</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#022b3a;line-height:1.6}
-.container{max-width:1400px;margin:0 auto;background:#fff}
-.header{background:#022b3a;color:#fff;padding:20px;text-align:center}
-.header h1{font-size:2rem;font-weight:600;margin-bottom:8px}
-.header p{opacity:.9;font-size:1.1rem}
-.scenario-bar{background:#e1e5f2;padding:20px;border-bottom:1px solid #bfdbf7}
-.scenario-info{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:15px}
-.week-info{display:flex;justify-content:space-between;align-items:center}
-.week-badge{background:#1f7a8c;color:#fff;padding:8px 16px;border-radius:20px;font-weight:600}
-.scenario-description{color:#1f7a8c;font-size:.9rem;text-align:right}
-.chevron-progress{display:flex;align-items:center;justify-content:center;height:60px;margin-top:10px}
-.chevron-container{position:relative;height:50px;margin-right:-1px;display:flex;align-items:center}
-.chevron{height:50px;width:160px;position:relative;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.9rem;clip-path:polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%, 15px 50%);transition:all .3s ease}
-.chevron.baseline{clip-path:polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%)}
-.chevron.completed{background:#022b3a;color:#fff}
-.chevron.active{background:#1f7a8c;color:#fff}
-.chevron.locked{background:#e1e5f2;color:#bfdbf7}
-.chevron-progress-bar{position:absolute;bottom:2px;left:15px;right:15px;height:4px;background:rgba(255,255,255,.3);border-radius:2px;overflow:hidden}
-.chevron.baseline .chevron-progress-bar{left:5px}
-.chevron-progress-fill{height:100%;background:rgba(255,255,255,.9);border-radius:2px;transition:width .3s ease;width:0%}
-.chevron.locked .chevron-progress-bar,.chevron.locked .chevron-progress-fill{background:rgba(191,219,247,.3)}
-.main-content{display:flex;min-height:80vh}
-.network-section{flex:2;padding:30px;background:#fff;border-right:1px solid #e1e5f2}
-.info-panel{flex:1;background:#fff;padding:30px}
-.network-container{position:relative;width:100%;height:500px;background:#fff;border:2px solid #e1e5f2;border-radius:12px;overflow:hidden}
-.network-svg{width:100%;height:100%}
-.node{cursor:pointer;transition:all .3s ease}
-.node.clickable:hover{stroke:#540b0e;stroke-width:3}
-.node-clickarea{fill:transparent;cursor:pointer}
-.node.selected{stroke:#3d5a80;stroke-width:4}
-.node.user{fill:#022b3a}
-.node.supplier{fill:#1f7a8c}
-.node.supplier.selected-supplier{fill:#bfdbf7;stroke:#1f7a8c;stroke-width:4}
-.node.threepl{fill:#bfdbf7}
-.edge{stroke:#e1e5f2;stroke-width:2;fill:none}
-.edge.active{stroke:#3d5a80;stroke-width:3}
-.node-label{font-size:12px;fill:#fff;text-anchor:middle;dominant-baseline:central;font-weight:600}
-.info-card{background:#fff;border:1px solid #e1e5f2;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 2px 8px rgba(31,122,140,.1)}
-.info-card h3{color:#022b3a;margin-bottom:15px;font-size:1.2rem}
-.attribute{display:flex;justify-content:space-between;margin-bottom:8px;padding:8px 0;border-bottom:1px solid #e1e5f2}
-.attribute:last-child{border-bottom:none}
-.attribute-label{font-weight:500;color:#022b3a}
-.attribute-value{color:#1f7a8c;font-weight:600}
-.selection-section{margin-top:30px}
-.select-button{width:100%;background:#1f7a8c;color:#fff;border:none;padding:15px 20px;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .3s ease;margin-bottom:10px}
-.select-button:hover{background:#022b3a;transform:translateY(-1px)}
-.select-button:disabled{background:#e1e5f2;color:#bfdbf7;cursor:not-allowed;transform:none}
-.confidence-section{margin-top:20px}
-.confidence-slider{width:100%;margin:10px 0;appearance:none;height:6px;border-radius:3px;background:#e1e5f2;outline:none}
-.confidence-slider::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:#1f7a8c;cursor:pointer}
-.confidence-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#1f7a8c;cursor:pointer;border:none}
-.confidence-labels{display:flex;justify-content:space-between;font-size:.8rem;color:#1f7a8c}
-.navigation-buttons{display:flex;gap:10px;margin-top:30px}
-.nav-button{flex:1;padding:12px 20px;border:2px solid #1f7a8c;border-radius:8px;font-weight:600;cursor:pointer;transition:all .3s ease}
-.nav-button.primary{background:#1f7a8c;color:#fff}
-.nav-button.secondary{background:#fff;color:#1f7a8c}
-.nav-button:hover{background:#022b3a;border-color:#022b3a;color:#fff}
-.nav-button:disabled{background:#e1e5f2;border-color:#e1e5f2;color:#bfdbf7;cursor:not-allowed}
-.additional-info{background:#bfdbf7;padding:15px;border-radius:8px;margin-top:15px;font-size:.9rem}
-.results-section{text-align:center;padding:40px}
-.download-button{background:#1f7a8c;color:#fff;border:none;padding:15px 30px;border-radius:8px;font-size:1.1rem;font-weight:600;cursor:pointer;margin:10px;transition:all .3s ease}
-.download-button:hover{background:#022b3a;transform:translateY(-2px)}
-.hidden{display:none}
-@media (max-width:768px){.main-content{flex-direction:column}.network-section{border-right:none;border-bottom:1px solid #e1e5f2}.scenario-info{flex-direction:column;gap:10px;text-align:center}.chevron{width:120px;font-size:.8rem}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supplier Selection Research Study</title>
+  <link rel="icon" href="favicon.ico" />
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#fff; color:#022b3a; line-height:1.6; }
+    .container { max-width:1400px; margin:0 auto; background:#fff; }
+    .header { background:#033343; color:#fff; padding:28px 20px; text-align:center; }
+    .header h1 { font-size:2.2rem; font-weight:700; margin-bottom:6px; letter-spacing:.3px; }
+    .header p { opacity:.95; font-size:1.15rem; }
+
+    .scenario-bar { background:#e9edf6; padding:18px 20px; border-bottom:1px solid #d6e3f4; }
+    .scenario-info { max-width:1400px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
+    .week-info { display:flex; justify-content:space-between; align-items:center; }
+    .week-badge { background:#1f7a8c; color:#fff; padding:10px 18px; border-radius:22px; font-weight:700; }
+    .scenario-description { color:#1f7a8c; font-size:.95rem; text-align:right; }
+
+    .chevrons { display:flex; align-items:center; gap:26px; justify-content:center; min-height:64px; }
+    .chev { position:relative; height:50px; width:220px; display:flex; align-items:center; justify-content:center;
+            font-weight:700; font-size:1rem; color:#fff; background:#053242;
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 18px 50%);
+            transition:.25s all ease; }
+    .chev.active { background:#0b5c6c; }
+    .chev.completed { background:#06222c; }
+    .chev .bar { position:absolute; bottom:6px; left:18px; right:18px; height:6px; border-radius:3px; background:rgba(255,255,255,.35); overflow:hidden; }
+    .chev .fill { height:100%; width:0%; background:rgba(255,255,255,.9); transition:width .25s ease; }
+
+    .main-content { display:flex; min-height:70vh; }
+    .network-section { flex:2; padding:28px; border-right:1px solid #e1e5f2; }
+    .info-panel { flex:1; padding:28px; }
+    .network-container { position:relative; width:100%; height:520px; border:2px solid #e1e5f2; border-radius:12px; overflow:hidden; }
+    .network-svg { width:100%; height:100%; }
+    .edge { stroke:#e1e5f2; stroke-width:2; fill:none; }
+    .edge.active { stroke:#3d5a80; stroke-width:3; }
+
+    .node { cursor:pointer; transition:.2s all; }
+    .node.clickable:hover { stroke:#540b0e; stroke-width:3; }
+    .node.selected { stroke:#3d5a80; stroke-width:4; }
+    .node.user { fill:#022b3a; }
+    .node.supplier { fill:#1f7a8c; }
+    .node.supplier.selected-supplier { fill:#bfdbf7; stroke:#1f7a8c; stroke-width:4; }
+    .node.threepl { fill:#bfdbf7; }
+    .node-label { font-family:inherit; font-size:12px; fill:#ffffff; text-anchor:middle; dominant-baseline:central; font-weight:700; }
+
+    .info-card { border:1px solid #e1e5f2; border-radius:12px; padding:18px; margin-bottom:18px; box-shadow: 0 2px 8px rgba(31,122,140,0.08); }
+    .info-card h3 { color:#022b3a; margin-bottom:12px; font-size:1.15rem; }
+    .attribute { display:flex; justify-content:space-between; gap:12px; margin:8px 0; padding:6px 0; border-bottom:1px solid #eef3f9; }
+    .attribute:last-child { border-bottom:none; }
+    .attribute-label { font-weight:600; color:#022b3a; }
+    .attribute-value { color:#135c6b; font-weight:700; }
+    .additional-info { background:#bfdbf7; padding:12px; border-radius:8px; margin-top:12px; font-size:.92rem; }
+
+    .selection-section { margin-top:22px; }
+    .select-button { width:100%; background:#1f7a8c; color:#fff; border:none; padding:14px 18px; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; transition:.2s all; margin-bottom:10px; }
+    .select-button:hover { background:#022b3a; transform:translateY(-1px); }
+    .select-button:disabled { background:#e1e5f2; color:#bfdbf7; cursor:not-allowed; transform:none; }
+
+    .confidence-section { margin-top:12px; }
+    .confidence-slider { width:100%; margin:10px 0; appearance:none; height:6px; border-radius:3px; background:#e1e5f2; outline:none; }
+    .confidence-slider::-webkit-slider-thumb { appearance:none; width:20px; height:20px; border-radius:50%; background:#1f7a8c; cursor:pointer; }
+    .confidence-slider::-moz-range-thumb { width:20px; height:20px; border-radius:50%; background:#1f7a8c; cursor:pointer; border:none; }
+    .confidence-labels { display:flex; justify-content:space-between; font-size:.8rem; color:#1f7a8c; }
+
+    .navigation-buttons { display:flex; gap:10px; margin-top:24px; }
+    .nav-button { flex:1; padding:12px 18px; border:2px solid #1f7a8c; border-radius:10px; font-weight:700; cursor:pointer; transition:.2s all; }
+    .nav-button.primary { background:#1f7a8c; color:#fff; }
+    .nav-button.secondary { background:#fff; color:#1f7a8c; }
+    .nav-button:hover { background:#022b3a; border-color:#022b3a; color:#fff; }
+    .nav-button:disabled { background:#e1e5f2; border-color:#e1e5f2; color:#bfdbf7; cursor:not-allowed; }
+
+    .results-section { text-align:center; padding:44px; }
+    .hidden { display:none; }
+
+    @media (max-width: 900px) {
+      .main-content { flex-direction:column; }
+      .network-section { border-right:none; border-bottom:1px solid #e1e5f2; }
+      .chevrons { gap:12px; }
+      .chev { width:170px; font-size:.9rem; }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <header class="header">
-    <h1>Supplier Selection Research Study</h1>
-    <p>Choose the best supplier option each week</p>
-  </header>
+  <div class="container">
+    <header class="header">
+      <h1>Supplier Selection Research Study</h1>
+      <p>Choose the best supplier option each week</p>
+    </header>
 
-  <div class="scenario-bar">
-    <div class="scenario-info">
-      <div class="week-info">
-        <div class="week-badge" id="weekBadge">Week 1</div>
-        <div class="scenario-description" id="scenarioDescription">Standard supplier information available</div>
-      </div>
-      <div class="chevron-progress">
-        <div class="chevron-container">
-          <div class="chevron baseline active" id="chevron0">
+    <div class="scenario-bar">
+      <div class="scenario-info">
+        <div class="week-info">
+          <div class="week-badge" id="weekBadge">Week 1</div>
+          <div class="scenario-description" id="scenarioDescription">Standard supplier information available</div>
+        </div>
+        <div class="chevrons">
+          <div class="chev active" id="chevron0">
             Baseline
-            <div class="chevron-progress-bar"><div class="chevron-progress-fill" id="chevronProgress0" style="width:0%"></div></div>
+            <div class="bar"><div class="fill" id="fill0"></div></div>
           </div>
-        </div>
-        <div class="chevron-container">
-          <div class="chevron locked" id="chevron1"> Transparency
-            <div class="chevron-progress-bar"><div class="chevron-progress-fill" id="chevronProgress1" style="width:0%"></div></div>
+          <div class="chev" id="chevron1">
+            Transparency
+            <div class="bar"><div class="fill" id="fill1"></div></div>
           </div>
-        </div>
-        <div class="chevron-container">
-          <div class="chevron locked" id="chevron2"> Reputation
-            <div class="chevron-progress-bar"><div class="chevron-progress-fill" id="chevronProgress2" style="width:0%"></div></div>
+          <div class="chev" id="chevron2">
+            Reputation
+            <div class="bar"><div class="fill" id="fill2"></div></div>
           </div>
-        </div>
-        <div class="chevron-container">
-          <div class="chevron locked" id="chevron3"> Verification
-            <div class="chevron-progress-bar"><div class="chevron-progress-fill" id="chevronProgress3" style="width:0%"></div></div>
+          <div class="chev" id="chevron3">
+            Verification
+            <div class="bar"><div class="fill" id="fill3"></div></div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="main-content">
-    <div class="network-section">
-      <h2 style="margin-bottom:20px; color:#022b3a;">Supply Network</h2>
-      <div class="network-container">
-        <svg class="network-svg" id="networkSvg"></svg>
-      </div>
-    </div>
-    <div class="info-panel">
-      <div id="nodeInfo" class="info-card">
-        <h3>Select a supplier or 3PL to view details</h3>
-        <p style="color:#1f7a8c;">Click on the network nodes to explore your options.</p>
-      </div>
-      <div id="selectionSection" class="selection-section hidden">
-        <button id="selectButton" class="select-button" onclick="selectSupplier()">Select This Supplier</button>
-        <div class="confidence-section">
-          <label for="confidenceSlider" style="font-weight:600; color:#022b3a;">Confidence in this decision:</label>
-          <input type="range" id="confidenceSlider" class="confidence-slider" min="1" max="7" value="4">
-          <div class="confidence-labels"><span>Very Low</span><span>Neutral</span><span>Very High</span></div>
+    <div class="main-content">
+      <div class="network-section">
+        <h2 style="margin-bottom: 18px;">Supply Network</h2>
+        <div class="network-container">
+          <svg class="network-svg" id="networkSvg"></svg>
         </div>
       </div>
-      <div class="navigation-buttons">
-        <button id="nextButton" class="nav-button primary" onclick="nextWeek()" disabled>Confirm Selection & Continue</button>
+
+      <div class="info-panel">
+        <div id="nodeInfo" class="info-card">
+          <h3>Select a supplier or 3PL to view details</h3>
+          <p style="color:#1f7a8c;">Click on the network nodes to explore your options.</p>
+        </div>
+
+        <div id="selectionSection" class="selection-section hidden">
+          <button id="selectButton" class="select-button" onclick="selectSupplier()">Select This Supplier</button>
+          <div class="confidence-section">
+            <label for="confidenceSlider" style="font-weight:700;">Confidence in this decision:</label>
+            <input type="range" id="confidenceSlider" class="confidence-slider" min="1" max="7" value="4">
+            <div class="confidence-labels">
+              <span>Very Low</span><span>Neutral</span><span>Very High</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="navigation-buttons">
+          <button id="nextButton" class="nav-button primary" onclick="nextWeek()" disabled>Confirm Selection & Continue</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="resultsSection" class="results-section hidden">
-    <h2 style="color:#022b3a; margin-bottom:20px;">Study Complete!</h2>
-    <p style="margin-bottom:30px; color:#1f7a8c;">Thank you for participating. Your data has been recorded.</p>
-    <button class="download-button" onclick="downloadResults()">Download Results (CSV)</button>
-    <button class="download-button" onclick="downloadResultsJSON()">Download Results (JSON)</button>
+    <div id="resultsSection" class="results-section hidden">
+      <h2 style="color:#022b3a; margin-bottom:14px;">Thank you!</h2>
+      <p style="color:#1f7a8c;">Your responses have been recorded.</p>
+    </div>
   </div>
-</div>
 
 <script>
-/* ====== CONFIG ====== */
-const COLLECTOR_URL = 'https://script.google.com/macros/s/AKfycbxFWJeAYEgIZfEqnQD7BzmXHGlH5v1Ekae-emWHAtjASh32EOVQgREUKws-vxZn5jOFig/exec';
+/* ========== CONFIG ========= */
+const COLLECTOR_URL = 'https://script.google.com/macros/s/AKfycbx2RmsvzDQoN5OT4vgjC0mjjyQyZZYxmK7TkOTBCLL4u5ZbAY8jRAGsnlXSYrSHGx6uAQ/exec'; // 
+const VERSION = 'v1.3-streaming-jsonp';
 
-/* ====== PERMS (fallback) ====== */
+/* ========= PERMS (server decides order; this is just for fallback display) ========== */
 const PERMS = [
-  [1,2,3],[1,3,2],[2,1,3],
-  [2,3,1],[3,1,2],[3,2,1]
+  [1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]
 ];
 
-function hashToArm(s){
-  let h=0; for(let i=0;i<s.length;i++) h=(h*31 + s.charCodeAt(i))>>>0;
-  return h%6;
-}
-
-/* ====== DATA ====== */
-let participantData = {
-  version:'v1.2-jsonp',
-  participantId:'P'+Date.now(),
-  startTimeISO:new Date().toISOString(),
-  startTimeMs:Date.now(),
-  layoutSeed: Math.floor(Math.random()*1e9),
-  decisions:[],
-  interactions:[],
-  currentWeek:1,
-  currentScenario:0, // position 0..3 in scenarioOrder
-  selectedNode:null,
-  order:[],
-  uploadStatus:null
-};
-
-let scenarioOrder = null;
-
-/* ====== SUPPLIERS / SCENARIOS ====== */
-const supplierProfiles = {
-  'A': { name:'Supplier A', type:'supplier', baseAttributes:{
-    'Relationship':'New market entrant','Service Level Agreement':'90%','Lead Time':'Slow','Certifications':'High quality certifications'}},
-  'B': { name:'Supplier B', type:'supplier', baseAttributes:{
-    'Relationship':'Established','Service Level Agreement':'80%','Lead Time':'Fast','Certifications':'Basic certifications'}},
-  'C': { name:'Supplier C', type:'supplier', baseAttributes:{
-    'Relationship':'Established','Service Level Agreement':'85%','Lead Time':'Medium','Certifications':'Standard certifications'}},
-  'D': { name:'Supplier D', type:'supplier', baseAttributes:{
-    'Relationship':'New partnership','Service Level Agreement':'95%','Lead Time':'Very Fast','Certifications':'Premium certifications'}},
-  'F1': { name:'3PL A', type:'threepl', baseAttributes:{
-    'Service Range':'Consolidation terminal','Experience':'Established','Suppliers Managed':'Multiple suppliers','Coverage':'Regional'}},
-  'F2': { name:'3PL B', type:'threepl', baseAttributes:{
-    'Service Range':'Basic logistics','Experience':'New service','Suppliers Managed':'Single supplier exclusive','Coverage':'Local'}}
-};
-
-const scenarios = [
-  { name:'Baseline', description:'Standard supplier information available', additionalInfo:{} },
-  { name:'Transparency', description:'Real-time operational data available', additionalInfo:{
-    'A':{'Current Inventory':'High stock available','Processing Queue':'2 days backlog','Active Orders':'12 orders in production','Delivery Status':'On schedule for next shipment'},
-    'B':{'Current Inventory':'Medium stock levels','Processing Queue':'4 hours to process','Active Orders':'8 orders in production','Delivery Status':'3 shipments departed today'},
-    'F1':{'Active Connections':'5 suppliers currently connected','Live Tracking':'23 shipments in transit','Coordination Status':'Multi-modal logistics active','Current Capacity':'78% utilization'},
-    'F2':{'Active Connections':'1 exclusive supplier online','Live Tracking':'4 shipments in transit','Coordination Status':'Direct routing only','Current Capacity':'45% utilization'}
-  }},
-  { name:'Reputation', description:'Aggregated ratings and peer reviews available', additionalInfo:{
-    'A':{'Contractor Rating':'4.2/5 (78)','Delivery Rating':'3.8/5','Quality Rating':'4.6/5','Recent Feedback':'"Reliable but slower delivery"'},
-    'B':{'Contractor Rating':'4.7/5 (124)','Delivery Rating':'4.8/5','Quality Rating':'4.1/5','Recent Feedback':'"Fast delivery, consistent"'},
-    'F1':{'Service Rating':'4.6/5','Client Retention':'85%','Project Completion':'92% on-time','Testimonial':'"Excellent coordination"'},
-    'F2':{'Service Rating':'3.2/5','Client Retention':'45%','Project Completion':'67% on-time','Testimonial':'"Basic service"'}
-  }},
-  { name:'Verification', description:'Certification and compliance verification available', additionalInfo:{
-    'A':{'SLA Verification':'Verified: 90.2%','Certificate Status':'ISO 9001 (Dec 2026)','Compliance Audit':'PASS (minor)','Claims Verified':'✓ capacity confirmed'},
-    'B':{'SLA Verification':'Verified: 79.8%','Certificate Status':'Basic: valid','Compliance Audit':'PASS (none)','Claims Verified':'✓ capacity confirmed'},
-    'F1':{'Partnership Auth':'✓ 5 partnerships','Compliance Status':'All current','Network Verification':'✓ multi-supplier','Audit Status':'Annual verified'},
-    'F2':{'Partnership Auth':'✓ 1 exclusive','Compliance Status':'Basic only','Network Verification':'✓ single','Audit Status':'Limited'}
-  }}
-];
-
-const networkNodes = {
-  'User': { x:100, y:250, type:'user', label:'You' },
-  'A': { x:400, y:120, type:'supplier', label:'Supplier A', clickable:true },
-  'B': { x:400, y:380, type:'supplier', label:'Supplier B', clickable:true },
-  'F1': { x:300, y:200, type:'threepl', label:'3PL A', clickable:true },
-  'F2': { x:300, y:300, type:'threepl', label:'3PL B', clickable:true },
-  'C': { x:600, y:120, type:'supplier', label:'Supplier C', clickable:false },
-  'D': { x:600, y:380, type:'supplier', label:'Supplier D', clickable:false }
-};
-const networkEdges = [
-  { from:'User', to:'A' }, { from:'User', to:'B' },
-  { from:'User', to:'F1' }, { from:'User', to:'F2' },
-  { from:'F1', to:'C' }, { from:'F2', to:'B' }, { from:'F2', to:'D' }
-];
-
-/* ====== JSONP helper & assignment ====== */
-function jsonp(url) {
+/* ========= JSONP helper (cache-busted) ========= */
+function jsonp(url){
   return new Promise((resolve, reject) => {
     const cb = 'cb_' + Math.random().toString(36).slice(2);
-    const script = document.createElement('script');
+    const ts = Date.now();
     const sep = url.includes('?') ? '&' : '?';
-    script.src = `${url}${sep}callback=${cb}`;
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `${url}${sep}callback=${cb}&_ts=${ts}`;
     window[cb] = (data) => { try{ resolve(data); } finally { delete window[cb]; script.remove(); } };
     script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('JSONP load error')); };
     document.body.appendChild(script);
   });
 }
 
+/* ========= Network data ========= */
+const supplierProfiles = {
+  'A': { name:'Supplier A', type:'supplier', baseAttributes:{
+    'Relationship':'New market entrant','Service Level Agreement':'90%','Lead Time':'Slow','Certifications':'High quality certifications'} },
+  'B': { name:'Supplier B', type:'supplier', baseAttributes:{
+    'Relationship':'Established','Service Level Agreement':'80%','Lead Time':'Fast','Certifications':'Basic certifications'} },
+  'C': { name:'Supplier C', type:'supplier', baseAttributes:{
+    'Relationship':'Established','Service Level Agreement':'85%','Lead Time':'Medium','Certifications':'Standard certifications'} },
+  'D': { name:'Supplier D', type:'supplier', baseAttributes:{
+    'Relationship':'New partnership','Service Level Agreement':'95%','Lead Time':'Very Fast','Certifications':'Premium certifications'} },
+  'F1': { name:'3PL A', type:'threepl', baseAttributes:{
+    'Service Range':'Consolidation terminal','Experience':'Established','Suppliers Managed':'Multiple suppliers','Coverage':'Regional'} },
+  'F2': { name:'3PL B', type:'threepl', baseAttributes:{
+    'Service Range':'Basic logistics','Experience':'New service','Suppliers Managed':'Single supplier exclusive','Coverage':'Local'} }
+};
+
+const scenarios = [
+  { name:'Baseline', description:'Standard supplier information available', additionalInfo:{} },
+  { name:'Transparency', description:'Real-time operational data available', additionalInfo:{
+      'A': {'Current Inventory':'High stock available','Processing Queue':'2 days backlog','Active Orders':'12 orders in production','Delivery Status':'On schedule'},
+      'B': {'Current Inventory':'Medium stock','Processing Queue':'4 hours to process','Active Orders':'8 orders in production','Delivery Status':'3 shipments departed'},
+      'F1': {'Active Connections':'5 suppliers','Live Tracking':'23 shipments in transit','Coordination Status':'Multi-modal','Current Capacity':'78%'},
+      'F2': {'Active Connections':'1 exclusive','Live Tracking':'4 in transit','Coordination Status':'Direct routing','Current Capacity':'45%'}
+  }},
+  { name:'Reputation', description:'Aggregated ratings and peer reviews available', additionalInfo:{
+      'A': {'Contractor Rating':'4.2/5 (78)','Delivery Rating':'3.8/5','Quality Rating':'4.6/5','Recent Feedback':'"Reliable but slower"'},
+      'B': {'Contractor Rating':'4.7/5 (124)','Delivery Rating':'4.8/5','Quality Rating':'4.1/5','Recent Feedback':'"Fast and consistent"'},
+      'F1': {'Service Rating':'4.6/5','Client Retention':'85%','Project Completion':'92% on time','Testimonial':'"Excellent coordination"'},
+      'F2': {'Service Rating':'3.2/5','Client Retention':'45%','Project Completion':'67% on time','Testimonial':'"Basic, limited"'}
+  }},
+  { name:'Verification', description:'Certification and compliance verification available', additionalInfo:{
+      'A': {'SLA Verification':'Verified 90.2%','Certificate Status':'ISO 9001 to Dec 2026','Compliance Audit':'PASS (minor)','Claims Verified':'✓ capacity confirmed'},
+      'B': {'SLA Verification':'Verified 79.8%','Certificate Status':'Basic valid','Compliance Audit':'PASS (none)','Claims Verified':'✓ capacity confirmed'},
+      'F1': {'Partnership Auth':'✓ 5 partnerships','Compliance Status':'All current','Network Verification':'✓ multi-supplier','Audit Status':'Annual verified'},
+      'F2': {'Partnership Auth':'✓ 1 exclusive','Compliance Status':'Basic only','Network Verification':'✓ single partner','Audit Status':'Limited'}
+  }}
+];
+
+const networkNodes = {
+  'User': { x: 100, y: 250, type:'user', label:'You' },
+  'A':    { x: 400, y: 120, type:'supplier', label:'Supplier A', clickable:true },
+  'B':    { x: 400, y: 380, type:'supplier', label:'Supplier B', clickable:true },
+  'F1':   { x: 300, y: 200, type:'threepl', label:'3PL A', clickable:true },
+  'F2':   { x: 300, y: 300, type:'threepl', label:'3PL B', clickable:true },
+  'C':    { x: 600, y: 120, type:'supplier', label:'Supplier C', clickable:false },
+  'D':    { x: 600, y: 380, type:'supplier', label:'Supplier D', clickable:false }
+};
+const networkEdges = [
+  { from:'User', to:'A' }, { from:'User', to:'B' },
+  { from:'User', to:'F1' },{ from:'User', to:'F2' },
+  { from:'F1', to:'C' },   { from:'F2', to:'B' }, { from:'F2', to:'D' }
+];
+
+/* ========= Participant state ========= */
+const participantData = {
+  participantId: 'P' + Date.now(),
+  startTime: new Date().toISOString(),
+  startTimeMs: Date.now(),
+  decisions: [],
+  interactions: [],
+  currentWeek: 1,
+  currentScenarioPos: 0, // position 0..3 along the chevrons
+  selectedNode: null,
+  order: [0,1,2,3],   // will be replaced by server
+  layoutSeed: Math.floor(Math.random()*1e9),
+  version: VERSION
+};
+let scenarioOrder = [0,1,2,3]; // indices into `scenarios` (0 is Baseline)
+let interactionBuffer = [];
+
+/* ========= Server assignment ========= */
 async function assignArmFromServer(){
-  try{
-    const j = await jsonp(COLLECTOR_URL);
-    if (j && j.ok && Array.isArray(j.order) && j.order.length===4){
-      scenarioOrder = j.order.slice();
-      participantData.order = scenarioOrder.slice();
-      return;
+  try {
+    const data = await jsonp(COLLECTOR_URL);
+    if (data && data.ok && Array.isArray(data.order) && data.order.length===4){
+      participantData.order = data.order.slice();
+      scenarioOrder = data.order.slice(); // [0, X, Y, Z]
     }
-  }catch(_e){}
-  const arm = hashToArm(participantData.participantId);
-  scenarioOrder = [0, ...PERMS[arm]];
-  participantData.order = scenarioOrder.slice();
+  } catch(e){
+    // Fallback: deterministic arm from participantId hash
+    const arms = PERMS[(participantData.layoutSeed % 6)];
+    participantData.order = [0, ...arms];
+    scenarioOrder = participantData.order.slice();
+  }
 }
 
-function currentScenarioObj(){
-  const actualIndex = scenarioOrder[participantData.currentScenario];
-  return scenarios[actualIndex];
-}
-
-/* ====== RENDER ====== */
-function initializeNetwork() {
-  const svg = document.getElementById('networkSvg');
-  svg.innerHTML = '';
-
-  networkEdges.forEach(edge => {
-    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',networkNodes[edge.from].x);
-    line.setAttribute('y1',networkNodes[edge.from].y);
-    line.setAttribute('x2',networkNodes[edge.to].x);
-    line.setAttribute('y2',networkNodes[edge.to].y);
-    line.setAttribute('class','edge');
-    line.setAttribute('data-edge',`${edge.from}-${edge.to}`);
-    svg.appendChild(line);
-  });
-
-  Object.entries(networkNodes).forEach(([id,node])=>{
-    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    circle.setAttribute('cx',node.x); circle.setAttribute('cy',node.y);
-    circle.setAttribute('r', node.type==='user'?25:30);
-    circle.setAttribute('class',`node ${node.type}${node.clickable!==false?' clickable':''}`);
-    circle.setAttribute('data-node',id);
-    svg.appendChild(circle);
-
-    if (node.type!=='user' && node.clickable!==false){
-      const clickArea = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      clickArea.setAttribute('cx',node.x); clickArea.setAttribute('cy',node.y);
-      clickArea.setAttribute('r',45); clickArea.setAttribute('class','node-clickarea');
-      clickArea.setAttribute('data-node',id);
-      clickArea.addEventListener('click',()=>selectNode(id));
-      clickArea.addEventListener('mouseenter',()=>{ circle.style.stroke='#540b0e'; circle.style.strokeWidth='3'; });
-      clickArea.addEventListener('mouseleave',()=>{ if(!circle.classList.contains('selected')){ circle.style.stroke=''; circle.style.strokeWidth=''; }});
-      svg.appendChild(clickArea);
-    }
-
-    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
-    text.setAttribute('x',node.x); text.setAttribute('y',node.y); text.setAttribute('class','node-label');
-    text.textContent=node.label; svg.appendChild(text);
-  });
-}
-
-/* ====== UI ====== */
+/* ========= UI helpers ========= */
 function relabelChevronsForOrder(){
   const els = [
     document.getElementById('chevron0'),
@@ -313,57 +274,170 @@ function relabelChevronsForOrder(){
     document.getElementById('chevron3')
   ];
   els[0].childNodes[0].nodeValue = ' Baseline ';
-  for (let i=1;i<=3;i++){
-    const scIndex = scenarioOrder[i];
-    els[i].childNodes[0].nodeValue = ' ' + scenarios[scIndex].name + ' ';
+  for (let pos=1; pos<=3; pos++){
+    const scIndex = scenarioOrder[pos];
+    els[pos].childNodes[0].nodeValue = ' ' + scenarios[scIndex].name + ' ';
   }
 }
 
-function updateUI() {
-  const sc = currentScenarioObj();
-  const weekProgress = ((participantData.currentWeek - 1) / 4) * 100;
+function initializeNetwork(){
+  const svg = document.getElementById('networkSvg');
+  svg.innerHTML = '';
+  // edges
+  networkEdges.forEach((e) => {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', networkNodes[e.from].x);
+    line.setAttribute('y1', networkNodes[e.from].y);
+    line.setAttribute('x2', networkNodes[e.to].x);
+    line.setAttribute('y2', networkNodes[e.to].y);
+    line.setAttribute('class','edge');
+    line.setAttribute('data-edge', `${e.from}-${e.to}`);
+    svg.appendChild(line);
+  });
+  // nodes
+  Object.entries(networkNodes).forEach(([id,node])=>{
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', node.x);
+    circle.setAttribute('cy', node.y);
+    circle.setAttribute('r', node.type==='user' ? 25 : 30);
+    circle.setAttribute('class', `node ${node.type}${node.clickable!==false?' clickable':''}`);
+    circle.setAttribute('data-node', id);
+    svg.appendChild(circle);
 
+    if (node.type!=='user' && node.clickable!==false){
+      const clickArea = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      clickArea.setAttribute('cx', node.x);
+      clickArea.setAttribute('cy', node.y);
+      clickArea.setAttribute('r', 45);
+      clickArea.setAttribute('class','node-clickarea');
+      clickArea.setAttribute('data-node', id);
+      clickArea.addEventListener('click', ()=>selectNode(id));
+      svg.appendChild(clickArea);
+    }
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x', node.x);
+    text.setAttribute('y', node.y);
+    text.setAttribute('class','node-label');
+    text.textContent = node.label;
+    svg.appendChild(text);
+  });
+}
+
+function displayNodeInfo(nodeId){
+  const profile = supplierProfiles[nodeId];
+  if (!profile) return;
+  const infoDiv = document.getElementById('nodeInfo');
+  const currentScenarioIndex = scenarioOrder[participantData.currentScenarioPos];
+  const currentScenario = scenarios[currentScenarioIndex];
+
+  let html = `<h3>${profile.name}</h3>`;
+  Object.entries(profile.baseAttributes).forEach(([k,v])=>{
+    html += `<div class="attribute"><span class="attribute-label">${k}:</span><span class="attribute-value">${v}</span></div>`;
+  });
+  if (currentScenario.additionalInfo[nodeId]){
+    html += '<div class="additional-info"><strong>Additional Information:</strong>';
+    Object.entries(currentScenario.additionalInfo[nodeId]).forEach(([k,v])=>{
+      html += `<div class="attribute"><span class="attribute-label">${k}:</span><span class="attribute-value">${v}</span></div>`;
+    });
+    html += '</div>';
+  }
+  infoDiv.innerHTML = html;
+}
+
+function updateUI(){
+  const currentScenarioIndex = scenarioOrder[participantData.currentScenarioPos];
+  const currentScenario = scenarios[currentScenarioIndex];
+
+  const weekProgressPct = ((participantData.currentWeek - 1) / 4) * 100;
   document.getElementById('weekBadge').textContent = `Week ${participantData.currentWeek}`;
-  document.getElementById('scenarioDescription').textContent = sc.description;
+  document.getElementById('scenarioDescription').textContent = currentScenario.description;
 
   for (let i=0;i<4;i++){
-    const chevron = document.getElementById(`chevron${i}`);
-    const progressBar = document.getElementById(`chevronProgress${i}`);
-    if (i < participantData.currentScenario){
-      chevron.className = 'chevron completed';
-      progressBar.style.width = '100%';
-    } else if (i === participantData.currentScenario){
-      chevron.className = `chevron active${i===0?' baseline':''}`;
-      progressBar.style.width = `${weekProgress}%`;
+    const c = document.getElementById(`chevron${i}`);
+    const f = document.getElementById(`fill${i}`);
+    if (i < participantData.currentScenarioPos){
+      c.className = 'chev completed';
+      f.style.width = '100%';
+    } else if (i === participantData.currentScenarioPos){
+      c.className = 'chev active';
+      f.style.width = `${weekProgressPct}%`;
     } else {
-      chevron.className = 'chevron locked';
-      progressBar.style.width = '0%';
+      c.className = 'chev';
+      f.style.width = '0%';
     }
   }
 }
 
-/* ====== INTERACTION ====== */
-function selectNode(nodeId) {
-  const now = Date.now();
-  const last = participantData.lastActionTime ?? participantData.startTimeMs;
-  participantData.interactions.push({
+/* ========= Interaction + Decision streaming ========= */
+function postToCollector(obj, useBeacon=false){
+  try {
+    const json = JSON.stringify(obj);
+    if (useBeacon && navigator.sendBeacon){
+      const blob = new Blob([json], { type:'text/plain;charset=utf-8' });
+      navigator.sendBeacon(COLLECTOR_URL, blob);
+      return Promise.resolve(true);
+    }
+    return fetch(COLLECTOR_URL, {
+      method:'POST',
+      mode:'no-cors', // send-only
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+      body: json
+    });
+  } catch(e){ return Promise.resolve(false); }
+}
+
+function uploadDecisionImmediate(decision){
+  const payload = {
+    kind:'decision',
+    participantId: participantData.participantId,
+    order: participantData.order,
+    orderStr: (participantData.order||[]).join('-'),
+    layoutSeed: participantData.layoutSeed,
+    version: participantData.version,
+    decision
+  };
+  return postToCollector(payload, false);
+}
+
+function uploadInteractionsFlush(useBeacon=false){
+  if (!interactionBuffer.length) return;
+  const items = interactionBuffer.splice(0, interactionBuffer.length);
+  const payload = {
+    kind:'interactions',
+    participantId: participantData.participantId,
+    order: participantData.order,
+    orderStr: (participantData.order||[]).join('-'),
+    layoutSeed: participantData.layoutSeed,
+    version: participantData.version,
+    items
+  };
+  postToCollector(payload, useBeacon);
+}
+window.addEventListener('pagehide', ()=>uploadInteractionsFlush(true));
+
+/* ========= Event handlers ========= */
+function selectNode(nodeId){
+  const inter = {
     timestamp: new Date().toISOString(),
     week: participantData.currentWeek,
-    scenario: participantData.currentScenario,
+    scenario: participantData.currentScenarioPos,
     action: 'node_click',
-    nodeId,
-    timeOnPage: now - last
-  });
-  participantData.lastActionTime = now;
+    nodeId: nodeId,
+    key: '',
+    timeOnPage: Date.now() - (participantData.lastActionTime || participantData.startTimeMs)
+  };
+  participantData.interactions.push(inter);
+  interactionBuffer.push(inter);
+  participantData.lastActionTime = Date.now();
 
   document.querySelectorAll('.node').forEach(n=>n.classList.remove('selected'));
   document.querySelectorAll('.edge').forEach(e=>e.classList.remove('active'));
-
   const selectedNode = document.querySelector(`[data-node="${nodeId}"]`);
   if (selectedNode) selectedNode.classList.add('selected');
 
   networkEdges.forEach(edge=>{
-    if (nodeId==='B' && edge.from==='F2' && edge.to==='B') return;
+    if (nodeId === 'B' && edge.from==='F2' && edge.to==='B') return;
     if (edge.from===nodeId || edge.to===nodeId){
       const el = document.querySelector(`[data-edge="${edge.from}-${edge.to}"]`);
       if (el) el.classList.add('active');
@@ -373,63 +447,46 @@ function selectNode(nodeId) {
   displayNodeInfo(nodeId);
   participantData.selectedNode = nodeId;
 
-  const profile = supplierProfiles[nodeId];
-  if (profile){
+  if (supplierProfiles[nodeId]){
     document.getElementById('selectionSection').classList.remove('hidden');
     const btn = document.getElementById('selectButton');
-    btn.textContent = `Select ${profile.name}`;
+    btn.textContent = `Select ${supplierProfiles[nodeId].name}`;
     btn.disabled = false;
   }
 }
 
-function displayNodeInfo(nodeId) {
-  const profile = supplierProfiles[nodeId];
-  if (!profile) return;
-  const infoDiv = document.getElementById('nodeInfo');
-  const sc = currentScenarioObj();
-
-  let html = `<h3>${profile.name}</h3>`;
-  Object.entries(profile.baseAttributes).forEach(([k,v])=>{
-    html += `<div class="attribute"><span class="attribute-label">${k}:</span><span class="attribute-value">${v}</span></div>`;
-  });
-  if (sc.additionalInfo[nodeId]){
-    html += '<div class="additional-info"><strong>Additional Information:</strong>';
-    Object.entries(sc.additionalInfo[nodeId]).forEach(([k,v])=>{
-      html += `<div class="attribute"><span class="attribute-label">${k}:</span><span class="attribute-value">${v}</span></div>`;
-    });
-    html += '</div>';
-  }
-  infoDiv.innerHTML = html;
-}
-
-function selectSupplier() {
+function selectSupplier(){
   if (!participantData.selectedNode) return;
-  const now = Date.now();
-  const last = participantData.lastActionTime ?? participantData.startTimeMs;
-  const conf = document.getElementById('confidenceSlider').value;
-  const sc = currentScenarioObj();
+  const confidence = parseInt(document.getElementById('confidenceSlider').value, 10);
 
-  participantData.decisions.push({
+  const decision = {
     week: participantData.currentWeek,
-    scenario: participantData.currentScenario,
-    scenarioName: sc.name,
+    scenario: participantData.currentScenarioPos,
+    scenarioName: scenarios[scenarioOrder[participantData.currentScenarioPos]].name,
     selectedSupplier: participantData.selectedNode,
     supplierName: supplierProfiles[participantData.selectedNode].name,
     supplierType: supplierProfiles[participantData.selectedNode].type,
-    confidence: parseInt(conf),
+    confidence,
     timestamp: new Date().toISOString(),
-    decisionTime: now - last
-  });
+    decisionTime: Date.now() - (participantData.lastActionTime || participantData.startTimeMs)
+  };
+
+  participantData.decisions.push(decision);
+  uploadDecisionImmediate(decision); // stream immediately
 
   document.getElementById('nextButton').disabled = false;
-  const btn = document.getElementById('selectButton');
-  btn.disabled = true;
-  btn.textContent = `${supplierProfiles[participantData.selectedNode].name} Selected ✓`;
+  const sb = document.getElementById('selectButton');
+  sb.disabled = true;
+  sb.textContent = `${supplierProfiles[participantData.selectedNode].name} Selected ✓`;
 }
 
-async function nextWeek(){
+function nextWeek(){
+  // flush interactions each step
+  uploadInteractionsFlush(false);
+
   participantData.currentWeek++;
 
+  // Reset selection UI
   document.querySelectorAll('.node').forEach(n=>n.classList.remove('selected'));
   document.getElementById('selectionSection').classList.add('hidden');
   document.getElementById('nodeInfo').innerHTML = `
@@ -441,109 +498,36 @@ async function nextWeek(){
 
   if (participantData.currentWeek > 4){
     participantData.currentWeek = 1;
-    participantData.currentScenario++;
-    if (participantData.currentScenario >= 4){
-      await showResults();
+    participantData.currentScenarioPos++;
+    if (participantData.currentScenarioPos >= 4){
+      showResults();
       return;
     }
   }
   updateUI();
 }
 
-/* ====== RESULTS / EXPORT ====== */
-async function uploadResults(){
-  try{
-    await fetch(COLLECTOR_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(participantData)
-    });
-    participantData.uploadStatus = 'sent';
-  }catch(_e){
-    participantData.uploadStatus = 'fail';
-  }
-}
-
-async function showResults(){
-  // swap UI
+function showResults(){
   document.querySelector('.main-content').classList.add('hidden');
-  const results = document.getElementById('resultsSection');
-  results.classList.remove('hidden');
-  results.innerHTML = `
-    <h2 style="color:#022b3a; margin-bottom:20px;">Thank you!</h2>
-    <p style="margin-bottom:10px; color:#1f7a8c;">Your responses have been recorded.</p>
-  `;
-
-  // finalize & upload
+  const r = document.getElementById('resultsSection');
+  r.classList.remove('hidden');
+  r.innerHTML = `<h2 style="color:#022b3a; margin-bottom:14px;">Thank you!</h2>
+                 <p style="color:#1f7a8c;">Your responses have been recorded.</p>`;
   participantData.endTime = new Date().toISOString();
   participantData.totalDurationMs = Date.now() - participantData.startTimeMs;
 
-  try{
-    await fetch(COLLECTOR_URL, {
-      method: 'POST',
-      mode: 'no-cors', // send-only, no readable response
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(participantData)
-    });
-    participantData.uploadStatus = 'sent';
-  }catch(_e){
-    participantData.uploadStatus = 'fail';
-  }
+  // final flush just in case
+  uploadInteractionsFlush(false);
 }
 
-
-function convertToCSV(data){
-  const headers = ['ParticipantID','Week','ScenarioPos','ScenarioName','SelectedSupplier','SupplierName','SupplierType','Confidence','DecisionTimeMs','Timestamp','Order'];
-  let csv = headers.join(',') + '\n';
-  data.decisions.forEach(d=>{
-    csv += [
-      data.participantId, d.week, d.scenario, `"${d.scenarioName}"`,
-      d.selectedSupplier, `"${d.supplierName}"`, d.supplierType,
-      d.confidence, d.decisionTime, d.timestamp, `"${(data.order||[]).join('-')}"`
-    ].join(',') + '\n';
-  });
-  csv += '\n\nInteraction Data:\n';
-  csv += 'ParticipantID,Timestamp,Week,ScenarioPos,Action,NodeID,TimeOnPageMs,Order\n';
-  data.interactions.forEach(x=>{
-    csv += [
-      data.participantId, x.timestamp, x.week, x.scenario, x.action,
-      x.nodeId || '', x.timeOnPage || '', `"${(data.order||[]).join('-')}"`
-    ].join(',') + '\n';
-  });
-  return csv;
-}
-
-function downloadResults(){
-  const csv = convertToCSV(participantData);
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display='none'; a.href=url; a.download=`supplier_study_${participantData.participantId}.csv`;
-  document.body.appendChild(a); a.click(); URL.revokeObjectURL(url);
-}
-
-function downloadResultsJSON(){
-  const json = JSON.stringify(participantData, null, 2);
-  const blob = new Blob([json], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display='none'; a.href=url; a.download=`supplier_study_${participantData.participantId}.json`;
-  document.body.appendChild(a); a.click(); URL.revokeObjectURL(url);
-}
-
-/* ====== INIT ====== */
-function relabelChevronsForOrder(){ /* defined above; called after assignment */ }
-async function init(){
+/* ========= Boot ========= */
+window.addEventListener('DOMContentLoaded', async () => {
   await assignArmFromServer();
   relabelChevronsForOrder();
   initializeNetwork();
   updateUI();
   participantData.lastActionTime = Date.now();
-}
-window.addEventListener('DOMContentLoaded', init);
+});
 </script>
 </body>
 </html>
-
-
