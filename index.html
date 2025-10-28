@@ -402,6 +402,66 @@ function displayNodeInfo(nodeId) {
   infoDiv.innerHTML = html;
 }
 
+/* ====== STREAM-UPLOAD HELPERS (ADDED) ====== */
+// write-only POST to Apps Script (no readback needed)
+function postToCollector(obj, useBeacon = false){
+  try{
+    const json = JSON.stringify(obj);
+    if (useBeacon && navigator.sendBeacon){
+      const blob = new Blob([json], { type:'text/plain;charset=utf-8' });
+      navigator.sendBeacon(COLLECTOR_URL, blob);
+      return Promise.resolve(true);
+    }
+    return fetch(COLLECTOR_URL, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+      body: json
+    });
+  }catch(_e){
+    return Promise.resolve(false);
+  }
+}
+
+// stream ONE decision immediately after selection
+function uploadDecisionImmediate(decision){
+  return postToCollector({
+    kind: 'decision',
+    participantId: participantData.participantId,
+    order: participantData.order,
+    orderStr: (participantData.order || []).join('-'),
+    layoutSeed: participantData.layoutSeed,
+    version: participantData.version || 'v1',
+    decision
+  });
+}
+
+// optional: checkpoint once per scenario (after week 4)
+function uploadScenarioCheckpoint(){
+  return postToCollector({
+    kind: 'scenario_checkpoint',
+    participantId: participantData.participantId,
+    order: participantData.order,
+    orderStr: (participantData.order || []).join('-'),
+    layoutSeed: participantData.layoutSeed,
+    version: participantData.version || 'v1',
+    progress: {
+      currentWeek: participantData.currentWeek,
+      currentScenarioPos: participantData.currentScenario,
+      decisionsSoFar: participantData.decisions.length,
+      interactionsSoFar: participantData.interactions.length,
+      lastTimestamp: new Date().toISOString()
+    }
+  });
+}
+
+// last-chance autosave if they close the tab mid-task
+window.addEventListener('pagehide', () => {
+  postToCollector({ kind:'exit_snapshot', ...participantData }, /*useBeacon*/ true);
+});
+
+/* ====== END STREAM-UPLOAD HELPERS ====== */
+
 function selectSupplier() {
   if (!participantData.selectedNode) return;
   const now = Date.now();
@@ -409,7 +469,7 @@ function selectSupplier() {
   const conf = document.getElementById('confidenceSlider').value;
   const sc = currentScenarioObj();
 
-  participantData.decisions.push({
+  const decision = {
     week: participantData.currentWeek,
     scenario: participantData.currentScenario,
     scenarioName: sc.name,
@@ -419,7 +479,12 @@ function selectSupplier() {
     confidence: parseInt(conf),
     timestamp: new Date().toISOString(),
     decisionTime: now - last
-  });
+  };
+
+  participantData.decisions.push(decision);
+
+  // >>> ADDED: stream this single decision right away
+  uploadDecisionImmediate(decision);
 
   document.getElementById('nextButton').disabled = false;
   const btn = document.getElementById('selectButton');
@@ -440,6 +505,10 @@ async function nextWeek(){
   participantData.selectedNode = null;
 
   if (participantData.currentWeek > 4){
+
+    // >>> ADDED: checkpoint after completing the 4 weeks of this scenario
+    await uploadScenarioCheckpoint();
+
     participantData.currentWeek = 1;
     participantData.currentScenario++;
     if (participantData.currentScenario >= 4){
@@ -482,7 +551,7 @@ async function showResults(){
   try{
     await fetch(COLLECTOR_URL, {
       method: 'POST',
-      mode: 'no-cors', // send-only, no readable response
+      mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(participantData)
     });
@@ -491,7 +560,6 @@ async function showResults(){
     participantData.uploadStatus = 'fail';
   }
 }
-
 
 function convertToCSV(data){
   const headers = ['ParticipantID','Week','ScenarioPos','ScenarioName','SelectedSupplier','SupplierName','SupplierType','Confidence','DecisionTimeMs','Timestamp','Order'];
@@ -560,5 +628,3 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
-
-
