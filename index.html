@@ -162,7 +162,7 @@ function hashToArm(s){
 
 /* ====== DATA ====== */
 let participantData = {
-  version:'v1.2-jsonp',
+  version:'v1.3-content-fixes',
   participantId:'P'+Date.now(),
   startTimeISO:new Date().toISOString(),
   startTimeMs:Date.now(),
@@ -170,13 +170,14 @@ let participantData = {
   decisions:[],
   interactions:[],
   currentWeek:1,
-  currentScenario:0, // position 0..3 in scenarioOrder
+  currentScenario:0,
   selectedNode:null,
   order:[],
   uploadStatus:null
 };
 
 let scenarioOrder = null;
+let isAdvancing = false; // guard against double-click finishing early
 
 /* ====== SUPPLIERS / SCENARIOS ====== */
 const supplierProfiles = {
@@ -188,31 +189,44 @@ const supplierProfiles = {
     'Relationship':'Established','Service Level Agreement':'85%','Lead Time':'Medium','Certifications':'Standard certifications'}},
   'D': { name:'Supplier D', type:'supplier', baseAttributes:{
     'Relationship':'New partnership','Service Level Agreement':'95%','Lead Time':'Very Fast','Certifications':'Premium certifications'}},
+  /* 3PL content fixed & clearer wording */
   'F1': { name:'3PL A', type:'threepl', baseAttributes:{
-    'Service Range':'Consolidation terminal','Experience':'Established','Suppliers Managed':'Multiple suppliers','Coverage':'Regional'}},
+    'Operating Model':'Exclusive single-supplier contract',
+    'Service Type':'Consolidation hub (cross-dock)',
+    'Experience':'Established',
+    'Coverage':'Regional'}},
   'F2': { name:'3PL B', type:'threepl', baseAttributes:{
-    'Service Range':'Basic logistics','Experience':'New service','Suppliers Managed':'Single supplier exclusive','Coverage':'Local'}}
+    'Operating Model':'Multi-supplier aggregator',
+    'Service Type':'Line-haul & basic distribution',
+    'Experience':'Newer service',
+    'Coverage':'Local'}}
 };
 
+/* Scenario text fixes: clearer labels + swapped single/multi where needed */
 const scenarios = [
   { name:'Baseline', description:'Standard supplier information available', additionalInfo:{} },
-  { name:'Transparency', description:'Real-time operational data available', additionalInfo:{
-    'A':{'Current Inventory':'High stock available','Processing Queue':'2 days backlog','Active Orders':'12 orders in production','Delivery Status':'On schedule for next shipment'},
-    'B':{'Current Inventory':'Medium stock levels','Processing Queue':'4 hours to process','Active Orders':'8 orders in production','Delivery Status':'3 shipments departed today'},
-    'F1':{'Active Connections':'5 suppliers currently connected','Live Tracking':'23 shipments in transit','Coordination Status':'Multi-modal logistics active','Current Capacity':'78% utilization'},
-    'F2':{'Active Connections':'1 exclusive supplier online','Live Tracking':'4 shipments in transit','Coordination Status':'Direct routing only','Current Capacity':'45% utilization'}
+
+  { name:'Transparency', description:'Real-time operational information is visible', additionalInfo:{
+    'A':{'Current Inventory':'High stock available','Processing Queue':'~2 days backlog','Active Orders':'12 in production','Delivery Status':'On schedule — next dispatch in 24h'},
+    'B':{'Current Inventory':'Medium stock','Processing Queue':'~4 hours to process','Active Orders':'8 in production','Delivery Status':'1-day delay on latest dispatch'},
+    /* For 3PLs, make “customers” explicit and capacity clear */
+    'F1':{'Active Customers':'1 exclusive client','Live Tracking':'23 shipments in transit','Capacity Utilization':'~78% of truck/slot capacity','Coordination Status':'Cross-dock hub active'},
+    'F2':{'Active Customers':'Multiple clients','Live Tracking':'4 shipments in transit','Capacity Utilization':'~45% of truck/slot capacity','Coordination Status':'Direct routing only'}
   }},
-  { name:'Reputation', description:'Aggregated ratings and peer reviews available', additionalInfo:{
-    'A':{'Contractor Rating':'4.2/5 (78)','Delivery Rating':'3.8/5','Quality Rating':'4.6/5','Recent Feedback':'"Reliable but slower delivery"'},
-    'B':{'Contractor Rating':'4.7/5 (124)','Delivery Rating':'4.8/5','Quality Rating':'4.1/5','Recent Feedback':'"Fast delivery, consistent"'},
-    'F1':{'Service Rating':'4.6/5','Client Retention':'85%','Project Completion':'92% on-time','Testimonial':'"Excellent coordination"'},
-    'F2':{'Service Rating':'3.2/5','Client Retention':'45%','Project Completion':'67% on-time','Testimonial':'"Basic service"'}
+
+  { name:'Reputation', description:'Aggregated ratings and peer reviews are available', additionalInfo:{
+    'A':{'Contractor Rating':'4.2/5 (78)','Delivery Rating':'3.8/5','Quality Rating':'4.6/5','Recent Feedback':'“Reliable but slower delivery”'},
+    'B':{'Contractor Rating':'4.7/5 (124)','Delivery Rating':'4.8/5','Quality Rating':'4.1/5','Recent Feedback':'“Fast delivery, consistent”'},
+    'F1':{'Service Rating':'4.6/5','Client Retention':'85%','On-time Performance':'92%','Testimonial':'“Excellent coordination”'},
+    'F2':{'Service Rating':'3.2/5','Client Retention':'45%','On-time Performance':'67%','Testimonial':'“Basic service”'}
   }},
-  { name:'Verification', description:'Certification and compliance verification available', additionalInfo:{
-    'A':{'SLA Verification':'Verified: 90.2%','Certificate Status':'ISO 9001 (Dec 2026)','Compliance Audit':'PASS (minor)','Claims Verified':'✓ capacity confirmed'},
-    'B':{'SLA Verification':'Verified: 79.8%','Certificate Status':'Basic: valid','Compliance Audit':'PASS (none)','Claims Verified':'✓ capacity confirmed'},
-    'F1':{'Partnership Auth':'✓ 5 partnerships','Compliance Status':'All current','Network Verification':'✓ multi-supplier','Audit Status':'Annual verified'},
-    'F2':{'Partnership Auth':'✓ 1 exclusive','Compliance Status':'Basic only','Network Verification':'✓ single','Audit Status':'Limited'}
+
+  { name:'Verification', description:'Compliance and claims are verified by third parties', additionalInfo:{
+    /* make SLA wording plain; replace unclear “Partnership Auth”; swap single/multi */
+    'A':{'On-time Delivery (verified)':'90.2%','Certificate Status':'ISO 9001 (valid to Dec 2026)','Regulatory Compliance':'PASS (minor findings)','Capacity Claims':'Verified'},
+    'B':{'On-time Delivery (verified)':'79.8%','Certificate Status':'Basic certification (valid)','Regulatory Compliance':'PASS (no issues)','Capacity Claims':'Verified'},
+    'F1':{'Partnership Status':'Exclusive single-supplier (verified)','Compliance':'All requirements current','Network Model':'Cross-dock hub verified','Recent Audit Result':'PASS (annual)'},
+    'F2':{'Partnership Status':'Multi-supplier aggregator (verified)','Compliance':'Basic requirements current','Network Model':'Direct routing verified','Recent Audit Result':'PASS (limited)'}
   }}
 ];
 
@@ -402,66 +416,6 @@ function displayNodeInfo(nodeId) {
   infoDiv.innerHTML = html;
 }
 
-/* ====== STREAM-UPLOAD HELPERS (ADDED) ====== */
-// write-only POST to Apps Script (no readback needed)
-function postToCollector(obj, useBeacon = false){
-  try{
-    const json = JSON.stringify(obj);
-    if (useBeacon && navigator.sendBeacon){
-      const blob = new Blob([json], { type:'text/plain;charset=utf-8' });
-      navigator.sendBeacon(COLLECTOR_URL, blob);
-      return Promise.resolve(true);
-    }
-    return fetch(COLLECTOR_URL, {
-      method:'POST',
-      mode:'no-cors',
-      headers:{ 'Content-Type':'text/plain;charset=utf-8' },
-      body: json
-    });
-  }catch(_e){
-    return Promise.resolve(false);
-  }
-}
-
-// stream ONE decision immediately after selection
-function uploadDecisionImmediate(decision){
-  return postToCollector({
-    kind: 'decision',
-    participantId: participantData.participantId,
-    order: participantData.order,
-    orderStr: (participantData.order || []).join('-'),
-    layoutSeed: participantData.layoutSeed,
-    version: participantData.version || 'v1',
-    decision
-  });
-}
-
-// optional: checkpoint once per scenario (after week 4)
-function uploadScenarioCheckpoint(){
-  return postToCollector({
-    kind: 'scenario_checkpoint',
-    participantId: participantData.participantId,
-    order: participantData.order,
-    orderStr: (participantData.order || []).join('-'),
-    layoutSeed: participantData.layoutSeed,
-    version: participantData.version || 'v1',
-    progress: {
-      currentWeek: participantData.currentWeek,
-      currentScenarioPos: participantData.currentScenario,
-      decisionsSoFar: participantData.decisions.length,
-      interactionsSoFar: participantData.interactions.length,
-      lastTimestamp: new Date().toISOString()
-    }
-  });
-}
-
-// last-chance autosave if they close the tab mid-task
-window.addEventListener('pagehide', () => {
-  postToCollector({ kind:'exit_snapshot', ...participantData }, /*useBeacon*/ true);
-});
-
-/* ====== END STREAM-UPLOAD HELPERS ====== */
-
 function selectSupplier() {
   if (!participantData.selectedNode) return;
   const now = Date.now();
@@ -469,7 +423,7 @@ function selectSupplier() {
   const conf = document.getElementById('confidenceSlider').value;
   const sc = currentScenarioObj();
 
-  const decision = {
+  participantData.decisions.push({
     week: participantData.currentWeek,
     scenario: participantData.currentScenario,
     scenarioName: sc.name,
@@ -479,12 +433,7 @@ function selectSupplier() {
     confidence: parseInt(conf),
     timestamp: new Date().toISOString(),
     decisionTime: now - last
-  };
-
-  participantData.decisions.push(decision);
-
-  // >>> ADDED: stream this single decision right away
-  uploadDecisionImmediate(decision);
+  });
 
   document.getElementById('nextButton').disabled = false;
   const btn = document.getElementById('selectButton');
@@ -493,6 +442,9 @@ function selectSupplier() {
 }
 
 async function nextWeek(){
+  if (isAdvancing) return; // prevent double-trigger
+  isAdvancing = true;
+
   participantData.currentWeek++;
 
   document.querySelectorAll('.node').forEach(n=>n.classList.remove('selected'));
@@ -505,18 +457,16 @@ async function nextWeek(){
   participantData.selectedNode = null;
 
   if (participantData.currentWeek > 4){
-
-    // >>> ADDED: checkpoint after completing the 4 weeks of this scenario
-    await uploadScenarioCheckpoint();
-
     participantData.currentWeek = 1;
     participantData.currentScenario++;
     if (participantData.currentScenario >= 4){
       await showResults();
+      isAdvancing = false;
       return;
     }
   }
   updateUI();
+  isAdvancing = false;
 }
 
 /* ====== RESULTS / EXPORT ====== */
@@ -535,7 +485,6 @@ async function uploadResults(){
 }
 
 async function showResults(){
-  // swap UI
   document.querySelector('.main-content').classList.add('hidden');
   const results = document.getElementById('resultsSection');
   results.classList.remove('hidden');
@@ -544,7 +493,6 @@ async function showResults(){
     <p style="margin-bottom:10px; color:#1f7a8c;">Your responses have been recorded.</p>
   `;
 
-  // finalize & upload
   participantData.endTime = new Date().toISOString();
   participantData.totalDurationMs = Date.now() - participantData.startTimeMs;
 
@@ -608,11 +556,9 @@ function relabelChevronsForOrder(){
     document.getElementById('chevron2'),
     document.getElementById('chevron3')
   ];
-  // baseline always first
   els[0].childNodes[0].nodeValue = ' Baseline ';
-  // positions 1..3 are scenarioOrder[1..3]
   for (let i = 1; i <= 3; i++) {
-    const scIndex = scenarioOrder[i];             // e.g., [0,2,3,1]
+    const scIndex = scenarioOrder[i];
     els[i].childNodes[0].nodeValue = ' ' + scenarios[scIndex].name + ' ';
   }
 }
