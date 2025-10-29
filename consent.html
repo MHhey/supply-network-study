@@ -1,109 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Consent Form – Supplier Selection Study</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consent Form - Supplier Selection Research Study</title>
 <style>
-body{
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  background:#fff;color:#022b3a;line-height:1.6;
-  display:flex;justify-content:center;align-items:center;
-  min-height:100vh;margin:0;padding:20px;
-}
-.consent-card{
-  max-width:760px;width:100%;
-  border:1px solid #e1e5f2;border-radius:16px;
-  box-shadow:0 8px 24px rgba(31,122,140,.12);
-  padding:32px;
-}
-h1{margin-bottom:8px;color:#022b3a}
-h3{margin:20px 0 8px;color:#1f7a8c}
-p,li{margin-bottom:8px}
-ul{margin-left:20px}
-label{display:flex;gap:8px;margin-top:10px}
-button{
-  padding:12px 22px;margin-top:20px;border:none;border-radius:10px;
-  font-weight:600;cursor:pointer;font-size:1rem;
-}
-.btn-primary{background:#1f7a8c;color:#fff}
-.btn-primary:disabled{background:#e1e5f2;color:#bfdbf7;cursor:not-allowed}
-.btn-ghost{background:#fff;color:#1f7a8c;border:2px solid #1f7a8c;margin-left:10px}
-.footer-note{font-size:.9rem;color:#5b7a8c;margin-top:12px}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f8fafc;
+    color: #022b3a;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 800px;
+    margin: 60px auto;
+    background: #fff;
+    border: 1px solid #e1e5f2;
+    border-radius: 12px;
+    padding: 40px 50px;
+    box-shadow: 0 4px 12px rgba(2, 43, 58, 0.1);
+  }
+  h1 {
+    color: #022b3a;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  h2 {
+    color: #1f7a8c;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  p {
+    margin-bottom: 12px;
+  }
+  .checkbox-group {
+    margin: 20px 0;
+  }
+  label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+  input[type="checkbox"] {
+    margin-top: 4px;
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+  .button-container {
+    margin-top: 30px;
+    text-align: center;
+  }
+  button {
+    background: #1f7a8c;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  button:hover {
+    background: #022b3a;
+    transform: translateY(-1px);
+  }
+  button:disabled {
+    background: #e1e5f2;
+    color: #bfdbf7;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 0.9rem;
+    color: #555;
+  }
 </style>
 </head>
 <body>
-  <div class="consent-card">
-    <h1>Supplier Selection Research Study</h1>
-    <p><strong>Virginia Tech IRB #25-1022</strong>  •  15–30 minutes  •  Online behavioral decision task</p>
 
-    <h3>Purpose</h3>
-    <p>This study explores how different types of information—such as transparency, reputation, and verification—affect supplier selection and trust calibration in construction supply chains.</p>
-
-    <h3>What you’ll do</h3>
-    <ul>
-      <li>Review supplier or 3PL profiles in simulated weekly scenarios.</li>
-      <li>Select a supplier option each week and rate your confidence in the decision.</li>
-      <li>Total participation time is about 15–30 minutes.</li>
-    </ul>
-
-    <h3>Risks & benefits</h3>
-    <p>Participation involves minimal risk. There are no direct personal benefits, but your responses will help researchers understand how professionals make supplier-related decisions.</p>
-
-    <h3>Data & privacy</h3>
-    <ul>
-      <li>Your responses, timing, and interaction data will be recorded anonymously.</li>
-      <li>No identifying information is collected or stored.</li>
-      <li>All data are securely stored and analyzed in aggregate.</li>
-    </ul>
-
-    <h3>Contact</h3>
-    <p>If you have any questions about this study, please contact <strong>Heydari@vt.edu</strong>.</p>
-
-    <label><input type="checkbox" id="ckEligible">
-      <span>I have at least two years of experience—or familiarity—with construction procurement activities such as supplier selection, submittals, or material ordering decisions.</span>
+<div class="container">
+  <h1>Supplier Selection Research Study</h1>
+  <p>This study explores how professionals evaluate supplier options in a construction-related supply network. You will be asked to review supplier information across a few short decision-making rounds.</p>
+  
+  <h2>Participation</h2>
+  <p>Your participation is voluntary. The task will take approximately 10–15 minutes. You may stop at any time by closing the browser window. No identifying information will be collected other than timestamps and your responses.</p>
+  
+  <h2>Eligibility</h2>
+  <div class="checkbox-group">
+    <label><input type="checkbox" id="ckExperience">
+      <span>I have at least two years of experience, or familiarity, in construction or related project environments.</span>
     </label>
-
-    <label><input type="checkbox" id="ckConsent">
-      <span>I agree to participate in this research study and understand that my participation is voluntary.</span>
+    <label><input type="checkbox" id="ckDecision">
+      <span>I can compare supplier options and make informed choices based on the provided data.</span>
     </label>
-
-    <div>
-      <button id="btnAgree" class="btn-primary" disabled>I agree & start</button>
-      <button id="btnDecline" class="btn-ghost">I do not agree</button>
-    </div>
-    <div class="footer-note">By clicking “I agree & start,” you consent to take part in this study.</div>
   </div>
 
+  <h2>Contact</h2>
+  <p>If you have any questions about the study, please contact the researcher at <a href="mailto:heydari@vt.edu">heydari@vt.edu</a>.</p>
+
+  <div class="button-container">
+    <button id="startBtn" onclick="startStudy()" disabled>I Agree & Start</button>
+  </div>
+
+  <div class="footer">
+    Virginia Tech | Myers-Lawson School of Construction
+  </div>
+</div>
+
 <script>
-function enableBtn(){
-  const ok = document.getElementById('ckEligible').checked && document.getElementById('ckConsent').checked;
-  document.getElementById('btnAgree').disabled = !ok;
-}
-document.getElementById('ckEligible').addEventListener('change', enableBtn);
-document.getElementById('ckConsent').addEventListener('change', enableBtn);
+  const exp = document.getElementById('ckExperience');
+  const dec = document.getElementById('ckDecision');
+  const btn = document.getElementById('startBtn');
 
-document.getElementById('btnAgree').addEventListener('click', () => {
-  // log consent event before redirect
-  const payload = {
-    kind:'interactions',
-    participantId:'P'+Date.now(),
-    items:[{timestamp:new Date().toISOString(),action:'consent_agree'}]
-  };
-  navigator.sendBeacon(
-    'https://script.google.com/macros/s/AKfycbx2RmsvzDQoN5OT4vgjC0mjjyQyZZYxmK7TkOTBCLL4u5ZbAY8jRAGsnlXSYrSHGx6uAQ/exec',
-    new Blob([JSON.stringify(payload)],{type:'application/json'})
-  );
-  window.location.href = 'index.html';
-});
+  function checkConsent() {
+    btn.disabled = !(exp.checked && dec.checked);
+  }
 
-document.getElementById('btnDecline').addEventListener('click', () => {
-  document.body.innerHTML = `
-    <div style="text-align:center;max-width:500px;margin:auto;">
-      <h1>Thank you</h1>
-      <p>You chose not to participate. You may now close this window.</p>
-    </div>`;
-});
+  exp.addEventListener('change', checkConsent);
+  dec.addEventListener('change', checkConsent);
+
+  function startStudy() {
+    window.location.href = 'index.html';
+  }
 </script>
+
 </body>
 </html>
