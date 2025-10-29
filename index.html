@@ -199,8 +199,8 @@ const scenarios = [
   { name:'Transparency', description:'Real-time operational data available', additionalInfo:{
     'A':{'Current Inventory':'High stock available','Processing Queue':'2 days backlog','Active Orders':'12 orders in production','Delivery Status':'On time'},
     'B':{'Current Inventory':'Medium stock levels','Processing Queue':'4 hours to process','Active Orders':'8 orders in production','Delivery Status':'1-day delay'},
-    'F1':{'Active Clients':'1 exclusive client live','Live Tracking':'23 shipments in transit','Coordination Status':'Direct routing only','Capacity Utilization':'78%'},
-    'F2':{'Active Clients':'5+ active clients','Live Tracking':'4 shipments in transit','Coordination Status':'Multi-modal logistics active','Capacity Utilization':'45%'}
+    'F1':{'Active Clients':'1 exclusive client live','Live Tracking':'23 shipments in transit','Coordination Status':'Multi-modal logistics active','Capacity Utilization':'78%'},
+    'F2':{'Active Clients':'5+ active clients','Live Tracking':'4 shipments in transit','Coordination Status':'Direct routing only','Capacity Utilization':'45%'}
   }},
   { name:'Reputation', description:'Aggregated ratings and peer reviews available', additionalInfo:{
     'A':{'Contractor Rating':'4.2/5 (78)','Delivery Rating':'3.8/5','Quality Rating':'4.6/5','Recent Feedback':'"Reliable but slower delivery"'},
@@ -209,10 +209,10 @@ const scenarios = [
     'F2':{'Service Rating':'3.2/5','Client Retention':'45%','Project Completion':'67% on-time','Testimonial':'"Basic service"'}
   }},
   { name:'Verification', description:'Certification and compliance verification available', additionalInfo:{
-    'A':{'On-time Delivery Rate (verified)':'90.2%','Certificate Status':'ISO 9001 (Dec 2026)','Compliance Check':'PASS (minor)','Claims Verified':'✓ capacity confirmed'},
-    'B':{'On-time Delivery Rate (verified)':'79.8%','Certificate Status':'Basic: valid','Compliance Check':'PASS (none)','Claims Verified':'✓ capacity confirmed'},
-    'F1':{'Verified Partnerships':'✓ 1 exclusive','Compliance Check':'All current','Network Verification':'✓ single-supplier','Audit Result':'Annual audit verified'},
-    'F2':{'Verified Partnerships':'✓ 5 partnerships','Compliance Check':'Basic only','Network Verification':'✓ multi-supplier','Audit Result':'Limited audit'}
+    'A':{'On-time Delivery Rate (verified)':'90.2%','Certificate Status':'ISO 9001 (Dec 2026)','Claims Verified':'✓ capacity confirmed'},
+    'B':{'On-time Delivery Rate (verified)':'79.8%','Certificate Status':'Basic: valid','Claims Verified':'✓ capacity confirmed'},
+    'F1':{'Verified Partnerships':'✓ 1 exclusive','Network Verification':'✓ single-supplier','Audit Result':'Annual audit verified'},
+    'F2':{'Verified Partnerships':'✓ 5 partnerships','Network Verification':'✓ multi-supplier','Audit Result':'Limited audit'}
   }}
 ];
 
@@ -597,3 +597,4 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
