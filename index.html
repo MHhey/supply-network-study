@@ -69,7 +69,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .download-button{background:#1f7a8c;color:#fff;border:none;padding:15px 30px;border-radius:8px;font-size:1.1rem;font-weight:600;cursor:pointer;margin:10px;transition:all .3s ease}
 .download-button:hover{background:#022b3a;transform:translateY(-2px)}
 .hidden{display:none}
-@media (max-width:768px){.main-content{flex-direction:column}.network-section{border-right:none;border-bottom:1px solid #e1e5f2}.scenario-info{flex-direction:column;gap:10px;text-align:center}.chevron{width:120px;font-size:.8rem}}
+
+/* ---------- Phone-only polish (no desktop changes) ---------- */
+@media (max-width:768px){
+  .main-content{flex-direction:column}
+  .network-section{border-right:none;border-bottom:1px solid #e1e5f2}
+  .scenario-info{flex-direction:column;gap:10px;text-align:center}
+  .chevron{width:120px;font-size:.8rem}
+
+  /* Make chevron row horizontally scrollable on small screens */
+  .chevron-progress{overflow-x:auto;gap:8px;padding:6px 8px}
+  .chevron-container{flex:0 0 auto}
+
+  /* Give the network a bit more height on phones */
+  .network-container{height:min(62vh,520px)}
+
+  /* Keep the primary action reachable when scrolling */
+  .info-panel{position:relative;padding-bottom:84px}
+  .navigation-buttons{
+    position:sticky;bottom:0;
+    background:linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 18%);
+    padding-top:8px;padding-bottom:12px
+  }
+
+  /* Larger thumb targets */
+  .select-button,.nav-button{padding:16px 18px;font-size:1rem}
+  .confidence-slider{height:10px}
+  .confidence-slider::-webkit-slider-thumb{width:28px;height:28px}
+  .confidence-slider::-moz-range-thumb{width:28px;height:28px}
+
+  /* Prevent long values from causing sideways scroll */
+  .attribute{font-size:.95rem}
+  .attribute-value,.attribute-label{word-break:break-word}
+}
 </style>
 </head>
 <body>
@@ -268,6 +300,10 @@ function initializeNetwork() {
   const svg = document.getElementById('networkSvg');
   svg.innerHTML = '';
 
+  /* Make SVG responsive without changing coordinates (no desktop visual change) */
+  svg.setAttribute('viewBox', '0 0 700 500');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
   networkEdges.forEach(edge => {
     const line = document.createElementNS('http://www.w3.org/2000/svg','line');
     line.setAttribute('x1',networkNodes[edge.from].x);
@@ -288,9 +324,12 @@ function initializeNetwork() {
     svg.appendChild(circle);
 
     if (node.type!=='user' && node.clickable!==false){
+      const isPhone = window.matchMedia('(max-width: 480px)').matches;
+      const tapRadius = isPhone ? 56 : 45;
+
       const clickArea = document.createElementNS('http://www.w3.org/2000/svg','circle');
       clickArea.setAttribute('cx',node.x); clickArea.setAttribute('cy',node.y);
-      clickArea.setAttribute('r',45); clickArea.setAttribute('class','node-clickarea');
+      clickArea.setAttribute('r',tapRadius); clickArea.setAttribute('class','node-clickarea');
       clickArea.setAttribute('data-node',id);
       clickArea.addEventListener('click',()=>selectNode(id));
       clickArea.addEventListener('mouseenter',()=>{ circle.style.stroke='#540b0e'; circle.style.strokeWidth='3'; });
@@ -597,4 +636,3 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
-
